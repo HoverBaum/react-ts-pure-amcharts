@@ -2,18 +2,18 @@ import React, { useEffect, useRef } from 'react'
 import * as am4core from '@amcharts/amcharts4/core'
 import * as am4charts from '@amcharts/amcharts4/charts'
 import am4themes_animated from '@amcharts/amcharts4/themes/animated'
+import useAMChart from './useAMChart'
 
 am4core.useTheme(am4themes_animated)
 
 const Chart = () => {
   const chartRef = useRef<HTMLDivElement>(null)
+  const chart = useAMChart(chartRef, am4charts.XYChart)
 
   useEffect(() => {
-    if (!chartRef.current) return
+    if (!chart) return
 
     // Code for chart inspired by: https://www.amcharts.com/docs/v4/getting-started/integrations/using-react/
-    const chart = am4core.create(chartRef.current, am4charts.XYChart)
-
     const data = []
     let visits = 10
     for (let i = 1; i < 366; i++) {
@@ -40,12 +40,7 @@ const Chart = () => {
 
     series.tooltipText = '{valueY.value}'
     chart.cursor = new am4charts.XYCursor()
-
-    return () => {
-      if (!chart) return
-      chart.dispose()
-    }
-  }, [chartRef])
+  }, [chart])
 
   return <div ref={chartRef}>Chart</div>
 }
